@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Book Slots</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .card { background: #f9f9f9; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        input, select, button { padding: 10px; margin: 5px; width: 100%; box-sizing: border-box; }
+        .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+        .day { border: 1px solid #ddd; padding: 10px; min-height: 100px; }
+        .booked { background: #ffd966; padding: 3px; margin: 2px; border-radius: 3px; font-size: 0.8em; }
+        .time-slot { background: #e0f7fa; margin: 2px; padding: 2px; cursor: pointer; }
+        .time-slot.booked { background: #ffab91; }
+    </style>
+</head>
+<body>
+    <h1>Book Hood Time Slots</h1>
+    <button onclick="location.href='index.html'">Logout</button>
+    
+    <div class="card">
+        <h2>Book New Slot</h2>
+        <input type="date" id="bookingDate">
+        <select id="startTime">
+            <option value="08:00">8:00 AM</option>
+            <option value="09:00">9:00 AM</option>
+            <option value="10:00">10:00 AM</option>
+            <!-- Add more times as needed -->
+        </select>
+        <select id="duration">
+            <option value="1">1 hour</option>
+            <option value="2">2 hours</option>
+            <option value="3">3 hours</option>
+        </select>
+        <button onclick="bookSlot()">Book Slot</button>
+        <p id="bookingStatus"></p>
+    </div>
+    
+    <div class="card">
+        <h2>My Bookings</h2>
+        <ul id="myBookings"></ul>
+    </div>
+    
+    <script>
+        // Simple booking system
+        function bookSlot() {
+            const date = document.getElementById('bookingDate').value;
+            const start = document.getElementById('startTime').value;
+            const duration = document.getElementById('duration').value;
+            
+            // Calculate end time
+            const [hours, minutes] = start.split(':').map(Number);
+            const endHours = hours + parseInt(duration);
+            const endTime = `${endHours}:${minutes.toString().padStart(2, '0')}`;
+            
+            // Display booking
+            const bookingList = document.getElementById('myBookings');
+            const bookingItem = document.createElement('li');
+            bookingItem.textContent = `${date} ${start} - ${endTime} (${duration} hours)`;
+            bookingList.appendChild(bookingItem);
+            
+            // Show confirmation
+            document.getElementById('bookingStatus').textContent = "Booking successful!";
+            
+            // In a real app, you would save to Google Sheet here
+        }
+        
+        // Set default date to today
+        window.onload = function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookingDate').value = today;
+        };
+    </script>
+</body>
+</html>

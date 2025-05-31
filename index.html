@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lab Hood Booking</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .card { background: #f9f9f9; border-radius: 8px; padding: 20px; margin: 20px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        input, select, button { padding: 10px; margin: 5px; width: 100%; box-sizing: border-box; }
+        .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+        .day { border: 1px solid #ddd; padding: 10px; min-height: 100px; }
+        .booked { background: #ffd966; padding: 3px; margin: 2px; border-radius: 3px; font-size: 0.8em; }
+    </style>
+</head>
+<body>
+    <h1>Lab Hood Booking System</h1>
+    
+    <!-- Login Section -->
+    <div class="card" id="loginSection">
+        <h2>Lab Member Login</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <p id="loginMessage"></p>
+    </div>
+    
+    <!-- Public Calendar -->
+    <div class="card">
+        <h2>Current Bookings</h2>
+        <div id="publicCalendar" class="calendar">
+            <!-- Calendar will load here -->
+        </div>
+    </div>
+    
+    <script>
+        // Replace with your Google Sheet publish URL
+        const SHEET_URL = "YOUR_GOOGLE_SHEET_PUBLISH_URL";
+        
+        // Global variables
+        let bookings = [];
+        
+        // Load bookings from Google Sheet
+        async function loadBookings() {
+            try {
+                const response = await fetch(SHEET_URL);
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Extract bookings data
+                const rows = doc.querySelectorAll('table tr');
+                for(let i = 1; i < rows.length; i++) {
+                    const cells = rows[i].querySelectorAll('td');
+                    if(cells.length >= 5) {
+                        bookings.push({
+                            user: cells[0].textContent,
+                            start: cells[1].textContent,
+                            end: cells[2].textContent,
+                            date: cells[3].textContent,
+                            duration: cells[4].textContent
+                        });
+                    }
+                }
+                
+                renderPublicCalendar();
+            } catch (error) {
+                console.error("Error loading bookings:", error);
+            }
+        }
+        
+        // Render public calendar
+        function renderPublicCalendar() {
+            const calendar = document.getElementById('publicCalendar');
+            calendar.innerHTML = '';
+            
+            // Create 7 days (simplified)
+            for(let i = 0; i < 7; i++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'day';
+                dayDiv.innerHTML = `<strong>Day ${i+1}</strong>`;
+                
+                // Add bookings for this day
+                bookings.filter(b => b.date === `2023-01-${i+1}`).forEach(booking => {
+                    const bookingDiv = document.createElement('div');
+                    bookingDiv.className = 'booked';
+                    bookingDiv.textContent = `${booking.user} ${booking.start}-${booking.end}`;
+                    dayDiv.appendChild(bookingDiv);
+                });
+                
+                calendar.appendChild(dayDiv);
+            }
+        }
+        
+        // Login function
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Simple validation
+            if(username === 'user1' && password === 'pass1') {
+                window.location.href = 'booking.html';
+            } else {
+                document.getElementById('loginMessage').textContent = 'Invalid login';
+            }
+        }
+        
+        // Load bookings when page opens
+        window.onload = loadBookings;
+    </script>
+</body>
+</html>
