@@ -1,0 +1,96 @@
+// ================ BACKEND (GOOGLE APPS SCRIPT) ================ //
+function doGet() {
+  return HtmlService.createHtmlOutputFromFile('Index')
+    .setTitle('Lab Hood Booking')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+function login(username, password) {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const sheet = ss.getSheetByName("Users");
+    
+    if (!sheet) throw new Error("Users sheet not found");
+    
+    const data = sheet.getDataRange().getValues();
+    const headers = data[0].map(h => h.toString().toLowerCase().trim());
+    
+    const userCol = headers.indexOf("username");
+    const passCol = headers.indexOf("password");
+    const adminCol = headers.indexOf("is admin");
+    
+    if (userCol === -1 || passCol === -1 || adminCol === -1) {
+      throw new Error("Columns not found. Need: Username, Password, Is Admin");
+    }
+    
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][userCol] === username && data[i][passCol] == password) {
+        return {
+          name: username,
+          isAdmin: data[i][adminCol] === true || data[i][adminCol] === "TRUE"
+        };
+      }
+    }
+    
+    throw new Error("Invalid username or password");
+  } catch (e) {
+    console.error("Login error: " + e.message);
+    throw new Error("Login failed: " + e.message);
+  }
+}
+
+function createBooking(user, startTime, endTime, date) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName("Slots") || ss.insertSheet("Slots");
+  
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(["User", "Start Time", "End Time", "Date", "Duration"]);
+  }
+  
+  // Calculate duration in hours
+  const startMinutes = parseInt(startTime.split(':')[0]) * 60 + parseInt(startTime.split(':')[1]);
+  const endMinutes = parseInt(endTime.split(':')[0]) * 60 + parseInt(endTime.split(':')[1]);
+  const duration = (endMinutes - startMinutes) / 60;
+  
+  sheet.appendRow([user, startTime, endTime, date, duration]);
+  
+  return {message: "Slot booked successfully!", duration: duration};
+}
+
+function getBookings(startDate, endDate) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName("Slots");
+  
+  if (!sheet || sheet.getLastRow() === 0) return [];
+  
+  const data = sheet.getDataRange().getValues();
+  const headers = data[0].map(h => h.toString().toLowerCase());
+  
+  const bookings = [];
+  for (let i = 1; i < data.length; i++) {
+    const bookingDate = data[i][3]; // Date is in column D
+    if (bookingDate >= startDate && bookingDate <= endDate) {
+      bookings.push({
+        id: i, // Using row index as ID
+        userId: data[i][0],
+        username: data[i][0],
+        startTime: data[i][1],
+        endTime: data[i][2],
+        date: data[i][3],
+        duration: data[i][4]
+      });
+    }
+  }
+  
+  return bookings;
+}
+
+function deleteBooking(row) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName("Slots");
+  if (sheet && row > 0) {
+    sheet.deleteRow(row + 1); // +1 because header row
+    return true;
+  }
+  return false;
+}

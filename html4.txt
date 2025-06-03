@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mechanobiologics Lab TC Hood Booking System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border: #dee2e6;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --hover-shadow: 0 6px 16px rgba(0,0,0,0.12);
+            --admin: #6a0dad;
+            
+            /* User-specific colors */
+            --user1: #FF6B6B;
+            --user2: #4ECDC4;
+            --user3: #FFD166;
+            --user4: #6A0572;
+            --user5: #1A936F;
+            --user6: #114B5F;
+            --user7: #E63946;
+            --user8: #F8961E;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7f1 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 20px;
+        }
+        
+        header h1 {
+            font-size: 2.4rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .card-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.15);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 14px 28px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .btn-logout {
+            background: #e63946;
+        }
+        
+        .btn-logout:hover {
+            background: #d00000;
+        }
+        
+        .btn-admin {
+            background: var(--admin);
+        }
+        
+        .btn-admin:hover {
+            background: #5a0c9d;
+        }
+        
+        .btn-danger {
+            background: #e63946;
+        }
+        
+        .btn-danger:hover {
+            background: #c1121f;
+        }
+        
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+        
+        /* Login Section */
+        .login-container {
+            max-width: 500px;
+            margin: 40px auto;
+        }
+        
+        .public-calendar {
+            margin-top: 40px;
+        }
+        
+        /* Calendar Section */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .date-range {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--dark);
+            background: var(--light);
+            padding: 8px 20px;
+            border-radius: 12px;
+        }
+        
+        .calendar-container {
+            overflow: auto;
+            max-height: 70vh;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 12px;
+            position: relative;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: 120px repeat(7, 1fr); /* 7 days */
+            gap: 4px;
+        }
+        
+        .time-header, .day-header {
+            padding: 12px 5px;
+            text-align: center;
+            font-weight: 600;
+            color: white;
+            border-radius: 8px;
+            position: sticky;
+            z-index: 10;
+        }
+        
+        .time-header {
+            background: var(--primary);
+            position: sticky;
+            left: 0;
+            z-index: 20;
+        }
+        
+        .day-header {
+            background: var(--secondary);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.3;
+            padding: 8px 5px;
+            position: sticky;
+            top: 0;
+            z-index: 15;
+        }
+        
+        .day-name {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .day-date {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-top: 3px;
+        }
+        
+        .today-header {
+            background: #ff9e00;
+            box-shadow: 0 0 0 2px white, 0 0 0 4px #ff9e00;
+        }
+        
+        .time-slot {
+            height: 50px; /* Increased height for better visibility */
+            padding: 5px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            position: relative;
+            background: white;
+            font-size: 0.8rem;
+        }
+        
+        .time-label {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            font-size: 0.7rem;
+            color: var(--gray);
+            z-index: 1;
+            font-weight: bold;
+        }
+        
+        .booked-slot {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+            font-size: 0.8rem;
+            padding: 2px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            z-index: 2;
+            overflow: hidden;
+        }
+        
+        .booking-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            background: var(--light);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: var(--light);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .user-details {
+            flex: 1;
+        }
+        
+        .user-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        
+        .user-status {
+            color: var(--gray);
+            font-size: 1rem;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* Admin Controls */
+        .admin-controls {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 1px solid var(--border);
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .admin-title {
+            font-size: 1.5rem;
+            color: var(--admin);
+            font-weight: 600;
+        }
+        
+        .admin-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .admin-section {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .admin-section h3 {
+            margin-bottom: 15px;
+            color: var(--dark);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .admin-section h3 i {
+            color: var(--admin);
+        }
+        
+        .member-list, .booking-list {
+            list-style: none;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+        
+        .member-item, .booking-item {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .member-item:last-child, .booking-item:last-child {
+            border-bottom: none;
+        }
+        
+        .admin-badge {
+            background: var(--admin);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        /* Status Messages */
+        .status-message {
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        
+        .status-info {
+            background: #cce5ff;
+            color: #004085;
+            display: block;
+        }
+        
+        /* Loading Spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Delete icon in booked slots */
+        .delete-icon {
+            margin-left: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 2px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        .delete-icon:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+        
+        /* Public Calendar */
+        .public-calendar-header {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+        
+        .public-calendar-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .public-calendar .calendar-container {
+            max-height: 60vh;
+        }
+        
+        .public-calendar .time-slot {
+            height: 45px; /* Larger for public view */
+        }
+        
+        /* My Bookings Section */
+        .my-bookings {
+            background: var(--light);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .my-bookings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .my-bookings-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .bookings-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+        }
+        
+        .booking-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+        }
+        
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .booking-date {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .booking-user {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .booking-time {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .booking-duration {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        .booking-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .calendar-grid {
+                grid-template-columns: 80px repeat(7, 1fr);
+            }
+            
+            .time-header, .day-header {
+                padding: 8px 3px;
+                font-size: 0.8rem;
+            }
+            
+            .day-name {
+                font-size: 0.9rem;
+            }
+            
+            .day-date {
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .calendar-grid {
+                grid-template-columns: 70px repeat(7, 1fr);
+            }
+            
+            .time-slot {
+                height: 40px;
+                font-size: 0.7rem;
+            }
+            
+            .time-label {
+                font-size: 0.6rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .card {
+                padding: 20px;
+            }
+            
+            .calendar-grid {
+                grid-template-columns: 60px repeat(7, 1fr);
+            }
+            
+            .booking-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2.0rem;
+            }
+            
+            .admin-panel {
+                grid-template-columns: 1fr;
+            }
+            
+            .user-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .user-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .date-range {
+                font-size: 1rem;
+                padding: 6px 12px;
+            }
+            
+            .bookings-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>
+                <i class="fas fa-microscope"></i> 
+                Mechanobiologics Lab TC Hood Booking System
+            </h1>
+            <p>Reserve time slots for the tissue culture hood - Book up to 1 week in advance</p>
+        </header>
+        
+        <!-- Login Section -->
+        <div id="loginSection" class="login-container">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Lab Member Login</h2>
+                    <div class="lab-logo">
+                        <i class="fas fa-flask fa-2x" style="color: #4361ee;"></i>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="username"><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Enter your username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter your password">
+                </div>
+                
+                <button id="loginBtn" class="btn btn-block">Login to Book Slots</button>
+                
+                <div class="spinner" id="loginSpinner"></div>
+                <div id="loginStatus" class="status-message"></div>
+            </div>
+            
+            <!-- Public Calendar -->
+            <div class="public-calendar">
+                <div class="public-calendar-header">
+                    <h3 class="public-calendar-title">Current Bookings</h3>
+                </div>
+                <div class="calendar-container">
+                    <div class="calendar-grid" id="publicCalendarGrid">
+                        <!-- Public calendar will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Booking Section (Initially Hidden) -->
+        <div id="bookingSection" style="display: none;">
+            <div class="user-info">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">User Name</div>
+                    <div class="user-status" id="userStatus">Ready to book time slots</div>
+                </div>
+                <div class="user-actions">
+                    <button id="adminPanelBtn" class="btn btn-admin" style="display: none;">
+                        <i class="fas fa-cog"></i> Admin Panel
+                    </button>
+                    <button id="logoutBtn" class="btn btn-logout">Logout</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="calendar-header">
+                    <h2 class="card-title">Hood Schedule (7 Days)</h2>
+                    <div class="date-range" id="dateRange"></div>
+                </div>
+                
+                <div class="calendar-container">
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Headers will be generated dynamically -->
+                    </div>
+                </div>
+                
+                <div class="booking-controls">
+                    <div class="form-group">
+                        <label for="bookingDate"><i class="fas fa-calendar"></i> Booking Date</label>
+                        <input type="date" id="bookingDate" class="form-control">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="startTime"><i class="fas fa-clock"></i> Start Time</label>
+                        <select id="startTime" class="form-control">
+                            <!-- Times will be populated dynamically -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="duration"><i class="fas fa-hourglass"></i> Duration</label>
+                        <select id="duration" class="form-control">
+                            <option value="0.5">30 minutes</option>
+                            <option value="1">1 hour</option>
+                            <option value="1.5">1.5 hours</option>
+                            <option value="2">2 hours</option>
+                            <option value="3">3 hours</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" style="align-self: flex-end;">
+                        <button id="bookSlotBtn" class="btn btn-block">Book Slot</button>
+                    </div>
+                </div>
+                
+                <div id="bookingStatus" class="status-message"></div>
+            </div>
+            
+            <!-- My Bookings Section -->
+            <div class="my-bookings">
+                <div class="my-bookings-header">
+                    <h3 class="my-bookings-title">My Booked Slots</h3>
+                </div>
+                <div id="myBookingsList" class="bookings-list">
+                    <!-- User's bookings will be listed here -->
+                </div>
+            </div>
+            
+            <!-- Admin Controls Section -->
+            <div id="adminControls" class="admin-controls" style="display: none;">
+                <div class="admin-header">
+                    <div class="admin-title">Admin Controls</div>
+                    <button id="adminCloseBtn" class="btn"><i class="fas fa-times"></i> Close</button>
+                </div>
+                
+                <div class="admin-panel">
+                    <div class="admin-section">
+                        <h3><i class="fas fa-users"></i> Lab Members</h3>
+                        <ul id="memberList" class="member-list">
+                            <!-- Lab members will be listed here -->
+                        </ul>
+                    </div>
+                    
+                    <div class="admin-section">
+                        <h3><i class="fas fa-calendar-times"></i> Manage Bookings</h3>
+                        <div class="form-group">
+                            <label for="adminUserFilter">Filter by User:</label>
+                            <select id="adminUserFilter" class="form-control">
+                                <option value="all">All Users</option>
+                                <!-- User options will be populated -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button id="viewBookingsBtn" class="btn btn-block">View Bookings</button>
+                            <button id="deleteUserBookingsBtn" class="btn btn-block btn-danger">Delete User's Bookings</button>
+                        </div>
+                        <div id="adminBookingsList" class="booking-list">
+                            <!-- Bookings will be listed here -->
+                        </div>
+                    </div>
+                    
+                    <div class="admin-section">
+                        <h3><i class="fas fa-tools"></i> System Tools</h3>
+                        <div class="form-group">
+                            <button id="clearAllBookingsBtn" class="btn btn-block btn-danger">
+                                <i class="fas fa-trash"></i> Clear All Bookings
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <button id="exportBookingsBtn" class="btn btn-block">
+                                <i class="fas fa-file-export"></i> Export Bookings to CSV
+                            </button>
+                        </div>
+                        <div id="adminStatus" class="status-message"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            designed by Siddhesh
+        </div>
+    </div>
+
+    <script>
+        // Lab member data
+        const labMembers = [
+            { id: 1, username: "user1", password: "pass1", name: "Dr. Smith", isAdmin: true },
+            { id: 2, username: "user2", password: "pass2", name: "Jane Doe", isAdmin: false },
+            { id: 3, username: "user3", password: "pass3", name: "John Wilson", isAdmin: false },
+            { id: 4, username: "user4", password: "pass4", name: "Sara Kim", isAdmin: false },
+            { id: 5, username: "user5", password: "pass5", name: "Mike Taylor", isAdmin: false },
+            { id: 6, username: "user6", password: "pass6", name: "Lisa Moore", isAdmin: false },
+            { id: 7, username: "user7", password: "pass7", name: "David Lee", isAdmin: false },
+            { id: 8, username: "user8", password: "pass8", name: "Emma Garcia", isAdmin: false }
+        ];
+        
+        // Booked slots data
+        let bookings = [];
+        
+        // Current user
+        let currentUser = null;
+        
+        // Helper function to get date string in local time
+        function getLocalDateString(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        
+        // Helper function to format date for display
+        function formatDisplayDate(date) {
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            return `${days[date.getDay()]}, ${date.getDate()} ${date.toLocaleString('default', { month: 'short' })}`;
+        }
+        
+        // Format date for user display
+        function formatUserDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        }
+        
+        // Get user color
+        function getUserColor(username) {
+            const colors = {
+                'user1': 'var(--user1)',
+                'user2': 'var(--user2)',
+                'user3': 'var(--user3)',
+                'user4': 'var(--user4)',
+                'user5': 'var(--user5)',
+                'user6': 'var(--user6)',
+                'user7': 'var(--user7)',
+                'user8': 'var(--user8)'
+            };
+            return colors[username] || '#6c757d';
+        }
+        
+        // DOM Elements
+        const loginSection = document.getElementById('loginSection');
+        const bookingSection = document.getElementById('bookingSection');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const bookSlotBtn = document.getElementById('bookSlotBtn');
+        const loginSpinner = document.getElementById('loginSpinner');
+        const loginStatus = document.getElementById('loginStatus');
+        const bookingStatus = document.getElementById('bookingStatus');
+        const userAvatar = document.getElementById('userAvatar');
+        const userName = document.getElementById('userName');
+        const userStatus = document.getElementById('userStatus');
+        const dateRange = document.getElementById('dateRange');
+        const calendarGrid = document.getElementById('calendarGrid');
+        const publicCalendarGrid = document.getElementById('publicCalendarGrid');
+        const startTimeSelect = document.getElementById('startTime');
+        const adminControls = document.getElementById('adminControls');
+        const adminPanelBtn = document.getElementById('adminPanelBtn');
+        const adminCloseBtn = document.getElementById('adminCloseBtn');
+        const memberList = document.getElementById('memberList');
+        const adminBookingsList = document.getElementById('adminBookingsList');
+        const adminUserFilter = document.getElementById('adminUserFilter');
+        const viewBookingsBtn = document.getElementById('viewBookingsBtn');
+        const deleteUserBookingsBtn = document.getElementById('deleteUserBookingsBtn');
+        const clearAllBookingsBtn = document.getElementById('clearAllBookingsBtn');
+        const exportBookingsBtn = document.getElementById('exportBookingsBtn');
+        const adminStatus = document.getElementById('adminStatus');
+        const myBookingsList = document.getElementById('myBookingsList');
+        
+        // Initialize the calendar
+        function initCalendar() {
+            // Clear past bookings
+            clearPastBookings();
+            
+            // Generate calendar
+            generateCalendar();
+            
+            // Generate public calendar
+            generatePublicCalendar();
+            
+            // Update booking form
+            updateBookingForm();
+            
+            // Set date range text
+            updateDateRange();
+            
+            // Render user's bookings
+            renderMyBookings();
+        }
+        
+        // Clear past bookings
+        function clearPastBookings() {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            // Filter out past bookings
+            bookings = bookings.filter(booking => {
+                const bookingDate = new Date(booking.date);
+                return bookingDate >= today;
+            });
+        }
+        
+        // Generate the calendar grid
+        function generateCalendar() {
+            // Clear existing calendar
+            calendarGrid.innerHTML = '';
+            
+            const today = new Date();
+            const startDate = new Date(today);
+            const endDate = new Date(today);
+            endDate.setDate(today.getDate() + 6); // 7 days total
+            
+            // Add headers
+            calendarGrid.innerHTML = `
+                <div class="time-header">Time</div>
+            `;
+            
+            // Add day headers with dates
+            for (let i = 0; i < 7; i++) {
+                const dayDate = new Date(today);
+                dayDate.setDate(today.getDate() + i);
+                
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'day-header';
+                dayHeader.innerHTML = `
+                    <div class="day-name">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dayDate.getDay()]}</div>
+                    <div class="day-date">${dayDate.getDate()}</div>
+                `;
+                
+                // Highlight today
+                if (i === 0) {
+                    dayHeader.classList.add('today-header');
+                }
+                
+                calendarGrid.appendChild(dayHeader);
+            }
+            
+            // Generate time slots (6:00 to 21:30)
+            for (let hour = 6; hour <= 21; hour++) {
+                // Only add 30 min slot for hours before 21
+                for (let min = 0; min < 60; min += 30) {
+                    // Skip 21:30 as it's the last slot
+                    if (hour === 21 && min === 30) break;
+                    
+                    const time = `${hour.toString().padStart(2, '0')}:${min.toString().padStart(2, '00')}`;
+                    
+                    // Time label cell
+                    const timeLabel = document.createElement('div');
+                    timeLabel.className = 'time-slot';
+                    timeLabel.innerHTML = `<div class="time-label">${time}</div>`;
+                    timeLabel.style.position = 'sticky';
+                    timeLabel.style.left = '0';
+                    timeLabel.style.background = 'white';
+                    timeLabel.style.zIndex = '5';
+                    calendarGrid.appendChild(timeLabel);
+                    
+                    // Day cells
+                    for (let i = 0; i < 7; i++) {
+                        const daySlot = document.createElement('div');
+                        daySlot.className = 'time-slot';
+                        daySlot.dataset.time = time;
+                        
+                        const slotDate = new Date(today);
+                        slotDate.setDate(today.getDate() + i);
+                        daySlot.dataset.date = getLocalDateString(slotDate);
+                        
+                        daySlot.addEventListener('click', function() {
+                            selectTimeSlot(this);
+                        });
+                        calendarGrid.appendChild(daySlot);
+                    }
+                }
+            }
+            
+            // Add 21:30 slot separately
+            const timeLabel = document.createElement('div');
+            timeLabel.className = 'time-slot';
+            timeLabel.innerHTML = `<div class="time-label">21:30</div>`;
+            timeLabel.style.position = 'sticky';
+            timeLabel.style.left = '0';
+            timeLabel.style.background = 'white';
+            timeLabel.style.zIndex = '5';
+            calendarGrid.appendChild(timeLabel);
+            
+            for (let i = 0; i < 7; i++) {
+                const daySlot = document.createElement('div');
+                daySlot.className = 'time-slot';
+                daySlot.dataset.time = "21:30";
+                
+                const slotDate = new Date(today);
+                slotDate.setDate(today.getDate() + i);
+                daySlot.dataset.date = getLocalDateString(slotDate);
+                
+                daySlot.addEventListener('click', function() {
+                    selectTimeSlot(this);
+                });
+                calendarGrid.appendChild(daySlot);
+            }
+            
+            // Render existing bookings
+            renderBookings();
+        }
+        
+        // Generate public calendar
+        function generatePublicCalendar() {
+            // Clear existing calendar
+            publicCalendarGrid.innerHTML = '';
+            
+            const today = new Date();
+            const startDate = new Date(today);
+            const endDate = new Date(today);
+            endDate.setDate(today.getDate() + 6); // 7 days total
+            
+            // Add headers
+            publicCalendarGrid.innerHTML = `
+                <div class="time-header">Time</div>
+            `;
+            
+            // Add day headers with dates
+            for (let i = 0; i < 7; i++) {
+                const dayDate = new Date(today);
+                dayDate.setDate(today.getDate() + i);
+                
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'day-header';
+                dayHeader.innerHTML = `
+                    <div class="day-name">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dayDate.getDay()]}</div>
+                    <div class="day-date">${dayDate.getDate()}</div>
+                `;
+                
+                // Highlight today
+                if (i === 0) {
+                    dayHeader.classList.add('today-header');
+                }
+                
+                publicCalendarGrid.appendChild(dayHeader);
+            }
+            
+            // Generate time slots (6:00 to 21:30)
+            for (let hour = 6; hour <= 21; hour++) {
+                // Only add 30 min slot for hours before 21
+                for (let min = 0; min < 60; min += 30) {
+                    // Skip 21:30 as it's the last slot
+                    if (hour === 21 && min === 30) break;
+                    
+                    const time = `${hour.toString().padStart(2, '0')}:${min.toString().padStart(2, '00')}`;
+                    
+                    // Time label cell
+                    const timeLabel = document.createElement('div');
+                    timeLabel.className = 'time-slot';
+                    timeLabel.innerHTML = `<div class="time-label">${time}</div>`;
+                    timeLabel.style.position = 'sticky';
+                    timeLabel.style.left = '0';
+                    timeLabel.style.background = 'white';
+                    timeLabel.style.zIndex = '5';
+                    publicCalendarGrid.appendChild(timeLabel);
+                    
+                    // Day cells
+                    for (let i = 0; i < 7; i++) {
+                        const daySlot = document.createElement('div');
+                        daySlot.className = 'time-slot';
+                        daySlot.dataset.time = time;
+                        
+                        const slotDate = new Date(today);
+                        slotDate.setDate(today.getDate() + i);
+                        daySlot.dataset.date = getLocalDateString(slotDate);
+                        
+                        publicCalendarGrid.appendChild(daySlot);
+                    }
+                }
+            }
+            
+            // Add 21:30 slot separately
+            const timeLabel = document.createElement('div');
+            timeLabel.className = 'time-slot';
+            timeLabel.innerHTML = `<div class="time-label">21:30</div>`;
+            timeLabel.style.position = 'sticky';
+            timeLabel.style.left = '0';
+            timeLabel.style.background = 'white';
+            timeLabel.style.zIndex = '5';
+            publicCalendarGrid.appendChild(timeLabel);
+            
+            for (let i = 0; i < 7; i++) {
+                const daySlot = document.createElement('div');
+                daySlot.className = 'time-slot';
+                daySlot.dataset.time = "21:30";
+                
+                const slotDate = new Date(today);
+                slotDate.setDate(today.getDate() + i);
+                daySlot.dataset.date = getLocalDateString(slotDate);
+                
+                publicCalendarGrid.appendChild(daySlot);
+            }
+            
+            // Render existing bookings for public view
+            renderPublicBookings();
+        }
+        
+        // Update date range display
+        function updateDateRange() {
+            const today = new Date();
+            const endDate = new Date(today);
+            endDate.setDate(today.getDate() + 6);
+            
+            dateRange.textContent = 
+                `${formatDisplayDate(today)} to ${formatDisplayDate(endDate)}`;
+        }
+        
+        // Select a time slot
+        function selectTimeSlot(slot) {
+            // Clear previous selections
+            document.querySelectorAll('.time-slot.selected').forEach(s => {
+                s.classList.remove('selected');
+            });
+            
+            // Add selection class
+            slot.classList.add('selected');
+            
+            // Set the form values
+            document.getElementById('bookingDate').value = slot.dataset.date;
+            document.getElementById('startTime').value = slot.dataset.time;
+        }
+        
+        // Render bookings on calendar
+        function renderBookings() {
+            // Clear previous bookings
+            document.querySelectorAll('.booked-slot').forEach(el => el.remove());
+            
+            // Add new bookings
+            bookings.forEach(booking => {
+                // Find all slots for this booking
+                const bookingSlots = document.querySelectorAll(`.time-slot[data-date="${booking.date}"]`);
+                
+                bookingSlots.forEach(slot => {
+                    const slotTime = slot.dataset.time;
+                    const bookingStart = booking.startTime;
+                    const bookingEnd = booking.endTime;
+                    
+                    // Convert times to minutes for comparison
+                    const slotMinutes = timeToMinutes(slotTime);
+                    const startMinutes = timeToMinutes(bookingStart);
+                    const endMinutes = timeToMinutes(bookingEnd);
+                    
+                    // Check if this slot is within the booking time
+                    if (slotMinutes >= startMinutes && slotMinutes < endMinutes) {
+                        const bookedSlot = document.createElement('div');
+                        bookedSlot.className = 'booked-slot';
+                        bookedSlot.style.background = getUserColor(booking.username);
+                        
+                        // Create container for username and delete icon
+                        const contentDiv = document.createElement('div');
+                        contentDiv.style.display = 'flex';
+                        contentDiv.style.flexDirection = 'column';
+                        contentDiv.style.alignItems = 'center';
+                        contentDiv.style.justifyContent = 'center';
+                        
+                        // Add username
+                        const usernameSpan = document.createElement('span');
+                        usernameSpan.textContent = booking.username;
+                        contentDiv.appendChild(usernameSpan);
+                        
+                        // Add time range
+                        const timeSpan = document.createElement('span');
+                        timeSpan.textContent = `${booking.startTime}-${booking.endTime}`;
+                        timeSpan.style.fontSize = '0.7rem';
+                        contentDiv.appendChild(timeSpan);
+                        
+                        // Add delete icon if current user is the owner or admin
+                        if (currentUser && (currentUser.id === booking.userId || currentUser.isAdmin)) {
+                            const deleteIcon = document.createElement('i');
+                            deleteIcon.className = 'fas fa-trash-alt delete-icon';
+                            deleteIcon.title = 'Delete booking';
+                            deleteIcon.dataset.id = booking.id;
+                            deleteIcon.addEventListener('click', function(e) {
+                                e.stopPropagation(); // Prevent slot selection
+                                deleteBooking(booking.id);
+                            });
+                            contentDiv.appendChild(deleteIcon);
+                        }
+                        
+                        bookedSlot.appendChild(contentDiv);
+                        slot.appendChild(bookedSlot);
+                    }
+                });
+            });
+        }
+        
+        // Render bookings for public calendar
+        function renderPublicBookings() {
+            // Clear previous bookings
+            document.querySelectorAll('#publicCalendarGrid .booked-slot').forEach(el => el.remove());
+            
+            // Add new bookings
+            bookings.forEach(booking => {
+                // Find all slots for this booking
+                const bookingSlots = document.querySelectorAll(`#publicCalendarGrid .time-slot[data-date="${booking.date}"]`);
+                
+                bookingSlots.forEach(slot => {
+                    const slotTime = slot.dataset.time;
+                    const bookingStart = booking.startTime;
+                    const bookingEnd = booking.endTime;
+                    
+                    // Convert times to minutes for comparison
+                    const slotMinutes = timeToMinutes(slotTime);
+                    const startMinutes = timeToMinutes(bookingStart);
+                    const endMinutes = timeToMinutes(bookingEnd);
+                    
+                    // Check if this slot is within the booking time
+                    if (slotMinutes >= startMinutes && slotMinutes < endMinutes) {
+                        const bookedSlot = document.createElement('div');
+                        bookedSlot.className = 'booked-slot';
+                        bookedSlot.style.background = getUserColor(booking.username);
+                        
+                        // Create container for username
+                        const contentDiv = document.createElement('div');
+                        contentDiv.style.display = 'flex';
+                        contentDiv.style.flexDirection = 'column';
+                        contentDiv.style.alignItems = 'center';
+                        contentDiv.style.justifyContent = 'center';
+                        
+                        // Add username
+                        const usernameSpan = document.createElement('span');
+                        usernameSpan.textContent = booking.username;
+                        contentDiv.appendChild(usernameSpan);
+                        
+                        // Add time range
+                        const timeSpan = document.createElement('span');
+                        timeSpan.textContent = `${booking.startTime}-${booking.endTime}`;
+                        timeSpan.style.fontSize = '0.7rem';
+                        contentDiv.appendChild(timeSpan);
+                        
+                        bookedSlot.appendChild(contentDiv);
+                        slot.appendChild(bookedSlot);
+                    }
+                });
+            });
+        }
+        
+        // Render user's bookings
+        function renderMyBookings() {
+            if (!currentUser) return;
+            
+            myBookingsList.innerHTML = '';
+            
+            const userBookings = bookings.filter(booking => booking.userId === currentUser.id);
+            
+            if (userBookings.length === 0) {
+                myBookingsList.innerHTML = '<div class="status-message status-info">You have no bookings yet</div>';
+                return;
+            }
+            
+            userBookings.forEach(booking => {
+                const bookingCard = document.createElement('div');
+                bookingCard.className = 'booking-card';
+                bookingCard.style.borderLeft = `5px solid ${getUserColor(booking.username)}`;
+                
+                bookingCard.innerHTML = `
+                    <div class="booking-header">
+                        <div class="booking-date">${formatUserDate(booking.date)}</div>
+                        <div class="booking-user">${booking.username}</div>
+                    </div>
+                    <div class="booking-time">
+                        <i class="fas fa-clock"></i>
+                        ${booking.startTime} - ${booking.endTime}
+                    </div>
+                    <div class="booking-duration">Duration: ${booking.duration} hours</div>
+                    <div class="booking-actions">
+                        <button class="btn btn-sm btn-danger delete-booking-btn" data-id="${booking.id}">
+                            <i class="fas fa-trash-alt"></i> Delete Slot
+                        </button>
+                    </div>
+                `;
+                
+                myBookingsList.appendChild(bookingCard);
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-booking-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const bookingId = parseInt(this.dataset.id);
+                    deleteBooking(bookingId);
+                });
+            });
+        }
+        
+        // Update booking form
+        function updateBookingForm() {
+            // Set default date to today
+            const today = new Date();
+            document.getElementById('bookingDate').valueAsDate = today;
+            document.getElementById('bookingDate').min = getLocalDateString(today);
+            
+            const maxDate = new Date(today);
+            maxDate.setDate(today.getDate() + 6);
+            document.getElementById('bookingDate').max = getLocalDateString(maxDate);
+            
+            // Initialize time options
+            populateTimeOptions();
+        }
+        
+        // Populate time options for start time dropdown (6:00-21:30)
+        function populateTimeOptions() {
+            startTimeSelect.innerHTML = '';
+            for (let hour = 6; hour <= 21; hour++) {
+                for (let min = 0; min < 60; min += 30) {
+                    // Skip 21:30 as it's the last slot
+                    if (hour === 21 && min === 30) break;
+                    
+                    const option = document.createElement('option');
+                    option.value = `${hour.toString().padStart(2, '0')}:${min.toString().padStart(2, '00')}`;
+                    option.textContent = `${hour.toString().padStart(2, '0')}:${min.toString().padStart(2, '00')}`;
+                    startTimeSelect.appendChild(option);
+                }
+            }
+            // Add 21:30 separately
+            const option = document.createElement('option');
+            option.value = "21:30";
+            option.textContent = "21:30";
+            startTimeSelect.appendChild(option);
+        }
+        
+        // Check for booking conflicts
+        function hasBookingConflict(newBooking) {
+            const newStart = timeToMinutes(newBooking.startTime);
+            const newEnd = newStart + (newBooking.duration * 60);
+            
+            for (const booking of bookings) {
+                if (booking.date === newBooking.date) {
+                    const existingStart = timeToMinutes(booking.startTime);
+                    const existingEnd = existingStart + (booking.duration * 60);
+                    
+                    // Check if new booking overlaps with existing booking
+                    // Allow bookings to start exactly when previous ends
+                    if (newStart < existingEnd && newEnd > existingStart) {
+                        return booking.username;
+                    }
+                }
+            }
+            
+            return null;
+        }
+        
+        // Convert time string to minutes
+        function timeToMinutes(time) {
+            const [hours, minutes] = time.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
+        
+        // Login function
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                loginStatus.textContent = 'Please enter both username and password';
+                loginStatus.className = 'status-message status-error';
+                return;
+            }
+            
+            // Show spinner
+            loginSpinner.style.display = 'block';
+            loginStatus.textContent = '';
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                const user = labMembers.find(u => u.username === username && u.password === password);
+                
+                if (user) {
+                    currentUser = user;
+                    
+                    // Update UI
+                    userAvatar.textContent = user.username.charAt(0).toUpperCase();
+                    userName.textContent = user.username;
+                    userStatus.textContent = user.isAdmin ? 'Lab Admin' : 'Lab Member';
+                    
+                    // Only show admin panel button for admins
+                    adminPanelBtn.style.display = user.isAdmin ? 'inline-block' : 'none';
+                    
+                    // Clear booking status
+                    bookingStatus.textContent = '';
+                    bookingStatus.className = 'status-message';
+                    
+                    loginSection.style.display = 'none';
+                    bookingSection.style.display = 'block';
+                    
+                    // Initialize calendar
+                    initCalendar();
+                } else {
+                    loginStatus.textContent = 'Invalid username or password';
+                    loginStatus.className = 'status-message status-error';
+                }
+                
+                // Hide spinner
+                loginSpinner.style.display = 'none';
+            }, 1000);
+        }
+        
+        // Logout function
+        function logout() {
+            currentUser = null;
+            bookingSection.style.display = 'none';
+            loginSection.style.display = 'block';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            loginStatus.textContent = '';
+            
+            // Hide admin controls
+            adminControls.style.display = 'none';
+            
+            // Clear booking status
+            bookingStatus.textContent = '';
+            bookingStatus.className = 'status-message';
+        }
+        
+        // Book a slot
+        function bookSlot() {
+            const date = document.getElementById('bookingDate').value;
+            const startTime = document.getElementById('startTime').value;
+            const duration = parseFloat(document.getElementById('duration').value);
+            
+            if (!date || !startTime) {
+                bookingStatus.textContent = 'Please select a date and time';
+                bookingStatus.className = 'status-message status-error';
+                return;
+            }
+            
+            // Check if date is in the past
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const bookingDate = new Date(date);
+            
+            if (bookingDate < today) {
+                bookingStatus.textContent = 'Cannot book for past dates';
+                bookingStatus.className = 'status-message status-error';
+                return;
+            }
+            
+            // Create booking object
+            const newBooking = {
+                id: bookings.length + 1,
+                userId: currentUser.id,
+                username: currentUser.username,
+                date: date,
+                startTime: startTime,
+                duration: duration,
+                endTime: calculateEndTime(startTime, duration)
+            };
+            
+            // Check for conflicts
+            const conflictUser = hasBookingConflict(newBooking);
+            if (conflictUser) {
+                bookingStatus.textContent = `Time slot conflict! Already booked by ${conflictUser}`;
+                bookingStatus.className = 'status-message status-error';
+                return;
+            }
+            
+            // Add to bookings
+            bookings.push(newBooking);
+            
+            // Show success message
+            bookingStatus.textContent = `Booking confirmed! ${duration} hour slot starting at ${startTime}`;
+            bookingStatus.className = 'status-message status-success';
+            
+            // Re-render calendar
+            renderBookings();
+            renderPublicBookings();
+            renderMyBookings();
+            
+            // Clear selection
+            document.querySelectorAll('.time-slot.selected').forEach(s => {
+                s.classList.remove('selected');
+            });
+            
+            // Reset form
+            document.getElementById('startTime').value = '';
+        }
+        
+        // Calculate end time
+        function calculateEndTime(startTime, duration) {
+            const [hours, minutes] = startTime.split(':').map(Number);
+            const totalMinutes = hours * 60 + minutes + duration * 60;
+            const endHours = Math.floor(totalMinutes / 60);
+            const endMinutes = totalMinutes % 60;
+            
+            return `${endHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+        }
+        
+        // Delete a booking
+        function deleteBooking(bookingId) {
+            const originalLength = bookings.length;
+            bookings = bookings.filter(b => b.id !== bookingId);
+            
+            if (bookings.length < originalLength) {
+                renderBookings();
+                renderPublicBookings();
+                renderMyBookings();
+                bookingStatus.textContent = 'Booking deleted successfully';
+                bookingStatus.className = 'status-message status-success';
+                
+                // Refresh admin view if open
+                if (adminControls.style.display === 'block') {
+                    loadAdminBookings();
+                }
+            }
+        }
+        
+        // Toggle admin controls
+        function toggleAdminPanel() {
+            if (adminControls.style.display === 'none') {
+                adminControls.style.display = 'block';
+                // Load admin data
+                loadAdminData();
+            } else {
+                adminControls.style.display = 'none';
+            }
+        }
+        
+        // Load admin data
+        function loadAdminData() {
+            // Load lab members
+            memberList.innerHTML = '';
+            
+            labMembers.forEach(member => {
+                const li = document.createElement('li');
+                li.className = 'member-item';
+                li.innerHTML = `
+                    <div>
+                        <strong>${member.username}</strong> - ${member.name}
+                        ${member.isAdmin ? '<span class="admin-badge">Admin</span>' : ''}
+                    </div>
+                `;
+                memberList.appendChild(li);
+            });
+            
+            // Populate user filter
+            adminUserFilter.innerHTML = '<option value="all">All Users</option>';
+            labMembers.forEach(member => {
+                const option = document.createElement('option');
+                option.value = member.id;
+                option.textContent = `${member.username} (${member.name})`;
+                adminUserFilter.appendChild(option);
+            });
+            
+            // Load all bookings by default
+            loadAdminBookings();
+        }
+        
+        // Load admin bookings with optional filter
+        function loadAdminBookings(filterUserId = null) {
+            adminBookingsList.innerHTML = '';
+            
+            // Filter bookings if needed
+            let filteredBookings = bookings;
+            if (filterUserId && filterUserId !== 'all') {
+                filteredBookings = bookings.filter(b => b.userId == filterUserId);
+            }
+            
+            if (filteredBookings.length === 0) {
+                adminBookingsList.innerHTML = '<div class="status-message status-info">No bookings found</div>';
+                return;
+            }
+            
+            filteredBookings.forEach(booking => {
+                const div = document.createElement('div');
+                div.className = 'booking-item';
+                div.innerHTML = `
+                    <div>
+                        <strong>${booking.date}</strong> ${booking.startTime}-${booking.endTime}
+                        <div>Booked by: ${booking.username}</div>
+                    </div>
+                    <button class="btn" style="padding: 4px 8px; font-size: 0.9rem;" onclick="deleteBooking(${booking.id})">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                `;
+                adminBookingsList.appendChild(div);
+            });
+        }
+        
+        // Clear all bookings
+        function clearAllBookings() {
+            if (confirm('Are you sure you want to delete ALL bookings? This action cannot be undone.')) {
+                bookings = [];
+                renderBookings();
+                renderPublicBookings();
+                renderMyBookings();
+                loadAdminBookings();
+                adminStatus.textContent = 'All bookings have been cleared';
+                adminStatus.className = 'status-message status-success';
+            }
+        }
+        
+        // Delete bookings for a specific user
+        function deleteUserBookings() {
+            const userId = adminUserFilter.value;
+            
+            if (userId === 'all') {
+                adminStatus.textContent = 'Please select a specific user';
+                adminStatus.className = 'status-message status-error';
+                return;
+            }
+            
+            const userName = adminUserFilter.options[adminUserFilter.selectedIndex].text.split(' ')[0];
+            
+            if (confirm(`Are you sure you want to delete all bookings for ${userName}?`)) {
+                const originalCount = bookings.length;
+                bookings = bookings.filter(booking => booking.userId != userId);
+                const deletedCount = originalCount - bookings.length;
+                
+                renderBookings();
+                renderPublicBookings();
+                renderMyBookings();
+                loadAdminBookings();
+                
+                adminStatus.textContent = `Deleted ${deletedCount} bookings for ${userName}`;
+                adminStatus.className = 'status-message status-success';
+            }
+        }
+        
+        // Export bookings to CSV
+        function exportBookingsToCSV() {
+            if (bookings.length === 0) {
+                adminStatus.textContent = 'No bookings to export';
+                adminStatus.className = 'status-message status-info';
+                return;
+            }
+            
+            // Create CSV content
+            let csvContent = 'Date,Start Time,End Time,Duration (hours),User\n';
+            
+            bookings.forEach(booking => {
+                csvContent += `"${booking.date}","${booking.startTime}","${booking.endTime}",${booking.duration},"${booking.username}"\n`;
+            });
+            
+            // Create download link
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'hood_bookings.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            adminStatus.textContent = 'Bookings exported successfully';
+            adminStatus.className = 'status-message status-success';
+        }
+        
+        // Event Listeners
+        loginBtn.addEventListener('click', login);
+        logoutBtn.addEventListener('click', logout);
+        bookSlotBtn.addEventListener('click', bookSlot);
+        adminPanelBtn.addEventListener('click', toggleAdminPanel);
+        adminCloseBtn.addEventListener('click', () => adminControls.style.display = 'none');
+        clearAllBookingsBtn.addEventListener('click', clearAllBookings);
+        deleteUserBookingsBtn.addEventListener('click', deleteUserBookings);
+        exportBookingsBtn.addEventListener('click', exportBookingsToCSV);
+        
+        // View bookings with filter
+        viewBookingsBtn.addEventListener('click', () => {
+            loadAdminBookings(adminUserFilter.value);
+        });
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize time options
+            populateTimeOptions();
+            
+            // Initialize public calendar
+            generatePublicCalendar();
+            renderPublicBookings();
+        });
+        
+        // Auto-refresh calendar at midnight
+        setInterval(() => {
+            const now = new Date();
+            if (now.getHours() === 0 && now.getMinutes() === 0) {
+                initCalendar();
+            }
+        }, 60000); // Check every minute
+    </script>
+</body>
+</html>
